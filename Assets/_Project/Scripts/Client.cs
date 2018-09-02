@@ -13,7 +13,7 @@ public class Client : MonoBehaviour
 
     private const int BUFFER_SIZE = 1024;
 
-    private Queue<ServerStateMessage> m_stateMessages = new Queue<ServerStateMessage>();
+    private ServerStateMessage m_latestStateMessage;
     private Inputs[] m_inputBuffer = new Inputs[BUFFER_SIZE];
     private ClientState[] m_stateBuffer = new ClientState[BUFFER_SIZE];
     private uint m_tick = 0;
@@ -35,7 +35,10 @@ public class Client : MonoBehaviour
 
     public void ReceiveServerMessage(ServerStateMessage stateMessage)
     {
-        m_stateMessages.Enqueue(stateMessage);
+        if (stateMessage.tick > m_latestStateMessage.tick)
+        {
+            m_latestStateMessage = stateMessage;
+        }
     }
 
     private void FixedUpdate()
@@ -98,20 +101,21 @@ public class Client : MonoBehaviour
 
     private void ProcessServerMessages(float dt)
     {
-        while (m_stateMessages.Count > 0) 
+        if (m_latestStateMessage.tick != 0)
         {
-            ServerStateMessage message = m_stateMessages.Dequeue();
+            Score = m_latestStateMessage.score;
 
-            Score = message.score;
-
-            if (DoesAnyObjectNeedCorrection(message))
+            if (DoesAnyObjectNeedCorrection(m_latestStateMessage))
             {
                 // Set all the rigidbodies state to that of the received server message
-                SetRigidbodyStates(message);
+                SetRigidbodyStates(m_latestStateMessage);
 
                 // Re-apply all the inputs from the tick of that server message
-                ResimulateFromTick(message.tick, dt);
+                ResimulateFromTick(m_latestStateMessage.tick, dt);
             }
+
+            // Clear message
+            m_latestStateMessage.tick = 0; 
         }
     }
 
