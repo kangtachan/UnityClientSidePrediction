@@ -6,7 +6,7 @@ User can control a paddle using WASD, and try to prevent multiple bouncing cubes
 
 ## Client-side prediction
 
-Server is authoritative of all rigidbodies. Client side prediction to smooth gameplay experience for client.
+Server is authoritative of all rigidbodies. Client side prediction is used to smooth gameplay experience for client.
 
 Client sends input to the server, and both the server and client simulate physics. When the client receives a snapshot update from the server, it determines if the client state at the server snapshot's timestamp is sufficiently different to the server snapshot state. If so, it resets the client rigidbodies to the server snapshot state, and re-simulates the physics from the server snapshot's timestamp.
 
