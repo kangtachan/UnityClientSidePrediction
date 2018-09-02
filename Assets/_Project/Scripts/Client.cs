@@ -6,7 +6,7 @@ using System;
 public class Client : MonoBehaviour
 {
     public event Action<InputMessage> NewClientMessage;
-    
+
     [SerializeField] GameObject m_sceneRoot = null;
     [SerializeField] float PositionErrorThreshold = 0.0001f;
     [SerializeField] float RotationErrorThreshold = 0.001f;
@@ -19,6 +19,7 @@ public class Client : MonoBehaviour
     private uint m_tick = 0;
     private Rigidbody[] m_syncedRigidbodies = null;
     private PaddleController m_paddle = null;
+    private bool m_correctionEnabled;
 
     public uint Score { get; private set; }
 
@@ -31,6 +32,11 @@ public class Client : MonoBehaviour
     public void SetSceneActive(bool active)
     {
         m_sceneRoot.SetActive(active);
+    }
+
+    public void CorrectionEnabled(bool correctionEnabled)
+    {
+        m_correctionEnabled = correctionEnabled;
     }
 
     public void ReceiveServerMessage(ServerStateMessage stateMessage)
@@ -105,7 +111,7 @@ public class Client : MonoBehaviour
         {
             Score = m_latestStateMessage.score;
 
-            if (DoesAnyObjectNeedCorrection(m_latestStateMessage))
+            if (m_correctionEnabled && DoesAnyObjectNeedCorrection(m_latestStateMessage))
             {
                 // Set all the rigidbodies state to that of the received server message
                 SetRigidbodyStates(m_latestStateMessage);
