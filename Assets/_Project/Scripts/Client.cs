@@ -20,6 +20,8 @@ public class Client : MonoBehaviour
     private Rigidbody[] m_syncedRigidbodies = null;
     private PaddleController m_paddle = null;
 
+    public uint Score { get; private set; }
+
     private void Awake()
     {
         m_syncedRigidbodies = GetComponentsInChildren<Rigidbody>(true);
@@ -99,6 +101,9 @@ public class Client : MonoBehaviour
         while (m_stateMessages.Count > 0) 
         {
             ServerStateMessage message = m_stateMessages.Dequeue();
+
+            Score = message.score;
+
             if (DoesAnyObjectNeedCorrection(message))
             {
                 // Set all the rigidbodies state to that of the received server message

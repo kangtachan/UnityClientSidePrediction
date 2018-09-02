@@ -17,6 +17,7 @@ public class MockServer : MonoBehaviour
     private Rigidbody[] m_syncedRigidbodies = null;
     private PaddleController m_paddle = null;
 
+    public uint Score { get; private set; }
     public float Latency { get; set; }
     
     void Awake ()
@@ -60,6 +61,7 @@ public class MockServer : MonoBehaviour
                 if (m_balls[i].OutOfPlay)
                 {
                     m_balls[i].Launch();
+                    Score++;
                 }
             }
 
@@ -75,6 +77,7 @@ public class MockServer : MonoBehaviour
         ServerStateMessage stateMessage;
 
         stateMessage.tick = m_tick;
+        stateMessage.score = Score;
 
         stateMessage.rigidbody_states = new RigidbodyState[m_syncedRigidbodies.Length];
         for (int i_rb = 0; i_rb < m_syncedRigidbodies.Length; i_rb++)
@@ -91,7 +94,6 @@ public class MockServer : MonoBehaviour
         });
     }
     
-
     private void DispatchOutgoingMessages()
     {
         while (m_messagesToSend.Count > 0 && m_messagesToSend.Peek().sendTime <= Time.time)

@@ -19,6 +19,7 @@ public struct ServerStateMessage
 {
     public RigidbodyState[] rigidbody_states;
     public uint tick;
+    public uint score;
 }
 
 public struct RigidbodyState
