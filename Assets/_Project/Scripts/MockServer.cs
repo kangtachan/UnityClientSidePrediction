@@ -8,14 +8,14 @@ public class MockServer : MonoBehaviour
     public event Action<ServerStateMessage> NewServerMessage;
 
     [SerializeField] Client m_client = null;
-    [SerializeField] PaddleController m_serverPaddle = null;
-    [SerializeField] BallLauncher m_ball = null;
-    [SerializeField] Rigidbody[] m_syncedRigidbodies = null;
     [SerializeField] GameObject m_sceneRoot = null;
 
     private Queue<InputMessage> m_receivedMessages = new Queue<InputMessage>();
     private Queue<DelayedStateMessage> m_messagesToSend = new Queue<DelayedStateMessage>();
     private uint m_tick;
+    private BallLauncher[] m_balls = null;
+    private Rigidbody[] m_syncedRigidbodies = null;
+    private PaddleController m_paddle = null;
 
     public float Latency { get; set; }
     
@@ -23,6 +23,9 @@ public class MockServer : MonoBehaviour
     {
         m_client.NewClientMessage += ReceiveClientMessage;
         NewServerMessage += m_client.ReceiveServerMessage;
+        m_balls = GetComponentsInChildren<BallLauncher>(true);
+        m_syncedRigidbodies = GetComponentsInChildren<Rigidbody>(true);
+        m_paddle = GetComponentInChildren<PaddleController>(true);
     }
 
     public void ReceiveClientMessage(InputMessage input_msg)
@@ -51,13 +54,17 @@ public class MockServer : MonoBehaviour
     {
         while (m_receivedMessages.Count > 0)
         {
-            if (m_ball.OutOfPlay)
+            // Server decides if ball is out of play
+            for (int i = 0; i < m_balls.Length; i++)
             {
-                m_ball.Launch();
+                if (m_balls[i].OutOfPlay)
+                {
+                    m_balls[i].Launch();
+                }
             }
 
             InputMessage input_msg = m_receivedMessages.Dequeue();
-            m_serverPaddle.ApplyInput(input_msg.input);
+            m_paddle.ApplyInput(input_msg.input);
 
             Physics.Simulate(dt);
         }
