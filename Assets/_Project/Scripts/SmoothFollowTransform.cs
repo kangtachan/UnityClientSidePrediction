@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SmoothFollowTransform : MonoBehaviour
 {
-    [SerializeField] Transform m_target;
+    [SerializeField] Transform m_target = null;
     [SerializeField] float m_lerpRate = 0.5f;
 
     private Transform m_transform;
