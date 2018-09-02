@@ -13,26 +13,21 @@ public class PaddleController : MonoBehaviour
         m_rigidbody = GetComponent<Rigidbody>();
     }
     
-    private void FixedUpdate()
+    public void ApplyInput(Inputs inputs)
     {
-        ApplyInput();
-    }
-
-    private void ApplyInput()
-    {
-        if (Input.GetKey(KeyCode.W))
+        if (inputs.up)
         {
             m_rigidbody.AddForce(Vector3.up * m_impulseStrength, ForceMode.Impulse);
         }
-        if (Input.GetKey(KeyCode.S))
+        if (inputs.down)
         {
             m_rigidbody.AddForce(Vector3.down * m_impulseStrength, ForceMode.Impulse);
         }
-        if (Input.GetKey(KeyCode.A))
+        if (inputs.left)
         {
             m_rigidbody.AddForce(Vector3.left * m_impulseStrength, ForceMode.Impulse);
         }
-        if (Input.GetKey(KeyCode.D))
+        if (inputs.right)
         {
             m_rigidbody.AddForce(Vector3.right * m_impulseStrength, ForceMode.Impulse);
         }
