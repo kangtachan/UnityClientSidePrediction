@@ -54,8 +54,8 @@ public class Client : MonoBehaviour
         StoreCurrentState(bufferIndex);
 
         Inputs inputs = GetInputForFrame();
-
-        ApplyInputClientSide(inputs);
+        
+        m_paddle.ApplyInput(inputs);
 
         m_inputBuffer[bufferIndex] = inputs;
 
@@ -67,7 +67,7 @@ public class Client : MonoBehaviour
 
         m_tick++;
     }
-
+    
     private void StoreCurrentState(uint bufferIndex)
     {
         ClientState state;
@@ -89,12 +89,7 @@ public class Client : MonoBehaviour
         inputs.right = Input.GetKey(KeyCode.D);
         return inputs;
     }
-
-    private void ApplyInputClientSide(Inputs inputs)
-    {
-        m_paddle.ApplyInput(inputs);
-    }
-
+    
     private void SendInputToServer(Inputs inputs)
     {
         InputMessage input_msg;
@@ -113,7 +108,7 @@ public class Client : MonoBehaviour
 
             if (m_correctionEnabled && DoesAnyObjectNeedCorrection(m_latestStateMessage))
             {
-                // Set all the rigidbodies state to that of the received server message
+                // Set all the rigidbodies' state to that of the received server message
                 SetRigidbodyStates(m_latestStateMessage);
 
                 // Re-apply all the inputs from the tick of that server message
@@ -124,9 +119,10 @@ public class Client : MonoBehaviour
             m_latestStateMessage.tick = 0; 
         }
     }
-
+    
     private bool DoesAnyObjectNeedCorrection(ServerStateMessage serverStateMessage)
     {
+        /// Return true if any rigidbody is deviating from a server rigidbody position
         uint bufferIndex = serverStateMessage.tick % BUFFER_SIZE;
 
         for (int i = 0; i < serverStateMessage.rigidbody_states.Length; i++)
@@ -148,6 +144,7 @@ public class Client : MonoBehaviour
 
     private void SetRigidbodyStates(ServerStateMessage stateMessage)
     {
+        // Override the client rigidbodies with the server rigidbody parameters
         for (int i = 0; i < stateMessage.rigidbody_states.Length; i++)
         {
             RigidbodyState serverRigidbodyState = stateMessage.rigidbody_states[i];
@@ -165,9 +162,10 @@ public class Client : MonoBehaviour
         {
             uint bufferIndex = startTick % BUFFER_SIZE;
 
+            // Store the state before input applied
             StoreCurrentState(bufferIndex);
 
-            ApplyInputClientSide(m_inputBuffer[bufferIndex]);
+            m_paddle.ApplyInput(m_inputBuffer[bufferIndex]);
 
             Physics.Simulate(dt);
 

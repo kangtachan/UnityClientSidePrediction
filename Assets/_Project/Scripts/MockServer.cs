@@ -24,6 +24,7 @@ public class MockServer : MonoBehaviour
     {
         m_client.NewClientMessage += ReceiveClientMessage;
         NewServerMessage += m_client.ReceiveServerMessage;
+        
         m_balls = GetComponentsInChildren<BallLauncher>(true);
         m_syncedRigidbodies = GetComponentsInChildren<Rigidbody>(true);
         m_paddle = GetComponentInChildren<PaddleController>(true);
@@ -36,6 +37,7 @@ public class MockServer : MonoBehaviour
 
     void FixedUpdate ()
     {
+        // Disable the client, so Physics.Simulate does not process the client objects
         m_client.SetSceneActive(false);
         m_sceneRoot.SetActive(true);
 
@@ -45,6 +47,7 @@ public class MockServer : MonoBehaviour
 
         DispatchOutgoingMessages();
 
+        // Turn client objects back on
         m_client.SetSceneActive(true);
         m_sceneRoot.SetActive(false);
 
@@ -74,6 +77,8 @@ public class MockServer : MonoBehaviour
 
     private void CreateOutgoingMessages()
     {
+        // Create messages and add to queue
+        // Not sending immediately to accomodate fake latency
         ServerStateMessage stateMessage;
 
         stateMessage.tick = m_tick;
@@ -96,6 +101,7 @@ public class MockServer : MonoBehaviour
     
     private void DispatchOutgoingMessages()
     {
+        // Send messages after fake latency time is reached
         while (m_messagesToSend.Count > 0 && m_messagesToSend.Peek().sendTime <= Time.time)
         {
             ServerStateMessage message = m_messagesToSend.Dequeue().message;
@@ -112,5 +118,4 @@ public class MockServer : MonoBehaviour
         public float sendTime;
         public ServerStateMessage message;
     }
-
 }
