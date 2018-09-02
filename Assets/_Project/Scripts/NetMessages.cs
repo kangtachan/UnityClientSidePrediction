@@ -18,6 +18,7 @@ public struct Inputs
 public struct StateMessage
 {
     public RigidbodyState[] rigidbody_states;
+    public float arrival_time;
 }
 
 public struct RigidbodyState
