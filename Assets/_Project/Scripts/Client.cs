@@ -140,7 +140,7 @@ public class Client : MonoBehaviour
     
     private void ResimulateFromTick(uint startTick, float dt)
     {
-        while (startTick < m_tick)
+        while (startTick <= m_tick)
         {
             uint bufferIndex = startTick % BUFFER_SIZE;
 
