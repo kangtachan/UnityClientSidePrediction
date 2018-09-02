@@ -5,7 +5,7 @@ using System;
 
 public class MockServer : MonoBehaviour
 {
-    public event Action<StateMessage> NewServerMessage;
+    public event Action<ServerStateMessage> NewServerMessage;
 
     [SerializeField] Client m_client = null;
     [SerializeField] PaddleController m_serverPaddle = null;
@@ -15,6 +15,7 @@ public class MockServer : MonoBehaviour
 
     private Queue<InputMessage> m_receivedMessages = new Queue<InputMessage>();
     private Queue<DelayedStateMessage> m_messagesToSend = new Queue<DelayedStateMessage>();
+    private uint m_tick;
 
     public float Latency { get; set; }
     
@@ -42,6 +43,8 @@ public class MockServer : MonoBehaviour
 
         m_client.SetSceneActive(true);
         m_sceneRoot.SetActive(false);
+
+        m_tick++;
     }
 
     private void UpdateServer(float dt)
@@ -62,9 +65,9 @@ public class MockServer : MonoBehaviour
 
     private void CreateOutgoingMessages()
     {
-        StateMessage stateMessage;
+        ServerStateMessage stateMessage;
 
-        stateMessage.arrival_time = Time.time + Latency;
+        stateMessage.tick = m_tick;
 
         stateMessage.rigidbody_states = new RigidbodyState[m_syncedRigidbodies.Length];
         for (int i_rb = 0; i_rb < m_syncedRigidbodies.Length; i_rb++)
@@ -86,7 +89,7 @@ public class MockServer : MonoBehaviour
     {
         while (m_messagesToSend.Count > 0 && m_messagesToSend.Peek().sendTime <= Time.time)
         {
-            StateMessage message = m_messagesToSend.Dequeue().message;
+            ServerStateMessage message = m_messagesToSend.Dequeue().message;
 
             if (NewServerMessage != null)
             {
@@ -98,7 +101,7 @@ public class MockServer : MonoBehaviour
     struct DelayedStateMessage
     {
         public float sendTime;
-        public StateMessage message;
+        public ServerStateMessage message;
     }
 
 }

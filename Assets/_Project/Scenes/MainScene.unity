@@ -212,7 +212,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  m_IsOn: 0
+  m_IsOn: 1
 --- !u!1 &45186347
 GameObject:
   m_ObjectHideFlags: 0
@@ -651,7 +651,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 0.25
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -1249,7 +1249,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 505591769}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.09, y: -0.03, z: -1.463}
+  m_LocalPosition: {x: 0.09, y: -0.03, z: -1.293}
   m_LocalScale: {x: 1, y: 1, z: 0.049999997}
   m_Children:
   - {fileID: 331294125}
@@ -2053,9 +2053,9 @@ GameObject:
   - component: {fileID: 1227889598}
   - component: {fileID: 1227889597}
   - component: {fileID: 1227889596}
-  - component: {fileID: 1227889595}
   - component: {fileID: 1227889599}
   - component: {fileID: 1227889600}
+  - component: {fileID: 1227889595}
   m_Layer: 0
   m_Name: Ball
   m_TagString: Untagged
@@ -2063,8 +2063,8 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!135 &1227889595
-SphereCollider:
+--- !u!65 &1227889595
+BoxCollider:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -2073,7 +2073,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1227889596
 MeshRenderer:
@@ -2113,7 +2113,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1227889594}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &1227889598
 Transform:
   m_ObjectHideFlags: 0
@@ -2254,7 +2254,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1374102193
 Transform:
   m_ObjectHideFlags: 0
@@ -2576,8 +2576,8 @@ GameObject:
   - component: {fileID: 1615983907}
   - component: {fileID: 1615983912}
   - component: {fileID: 1615983911}
-  - component: {fileID: 1615983910}
   - component: {fileID: 1615983909}
+  - component: {fileID: 1615983908}
   m_Layer: 0
   m_Name: Ball
   m_TagString: Untagged
@@ -2598,6 +2598,18 @@ Transform:
   m_Father: {fileID: 405577218}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1615983908
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1615983906}
+  m_Material: {fileID: 13400000, guid: 42888d7ba7a56ec4598a5653bcf5fa02, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &1615983909
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2613,18 +2625,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!135 &1615983910
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1615983906}
-  m_Material: {fileID: 13400000, guid: 42888d7ba7a56ec4598a5653bcf5fa02, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1615983911
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2663,7 +2663,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1615983906}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1721725146
 GameObject:
   m_ObjectHideFlags: 0
@@ -2845,6 +2845,7 @@ MonoBehaviour:
   - {fileID: 505591771}
   - {fileID: 1615983909}
   m_sceneRoot: {fileID: 405577217}
+  m_paddle: {fileID: 505591772}
 --- !u!1 &1977447935
 GameObject:
   m_ObjectHideFlags: 0
@@ -2862,7 +2863,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1977447936
 Transform:
   m_ObjectHideFlags: 0
@@ -2927,7 +2928,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1977447935}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1987530761
 GameObject:
   m_ObjectHideFlags: 0
@@ -3036,7 +3037,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1989462822}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.09, y: -0.03, z: -1.463}
+  m_LocalPosition: {x: 0.09, y: -0.03, z: -1.293}
   m_LocalScale: {x: 1, y: 1, z: 0.05}
   m_Children:
   - {fileID: 1614538302}

@@ -15,10 +15,10 @@ public struct Inputs
     public bool right;
 }
 
-public struct StateMessage
+public struct ServerStateMessage
 {
     public RigidbodyState[] rigidbody_states;
-    public float arrival_time;
+    public uint tick;
 }
 
 public struct RigidbodyState
@@ -28,4 +28,3 @@ public struct RigidbodyState
     public Vector3 velocity;
     public Vector3 angular_velocity;
 }
-
