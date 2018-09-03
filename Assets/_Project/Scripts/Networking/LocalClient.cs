@@ -95,6 +95,7 @@ public class LocalClient : MonoBehaviour, IClient
         inputs.down = Input.GetKey(KeyCode.S);
         inputs.left = Input.GetKey(KeyCode.A);
         inputs.right = Input.GetKey(KeyCode.D);
+        inputs.relaunch = Input.GetKey(KeyCode.Space);
         return inputs;
     }
     

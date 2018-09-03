@@ -13,6 +13,7 @@ public struct Inputs
     public bool down;
     public bool left;
     public bool right;
+    public bool relaunch;
 }
 
 public struct ServerStateMessage

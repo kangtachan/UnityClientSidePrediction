@@ -92,6 +92,15 @@ public class MockServer : MonoBehaviour
             InputMessage input_msg = m_receivedMessages.Dequeue();
             m_paddle.ApplyInput(input_msg.input);
 
+            // Relaunch balls if key pressed
+            if (input_msg.input.relaunch)
+            {
+                for (int i = 0; i < m_balls.Length; i++)
+                {
+                    m_balls[i].Launch();
+                }
+            }
+
             Physics.Simulate(dt);
         }
     }
