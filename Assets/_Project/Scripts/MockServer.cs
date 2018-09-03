@@ -7,8 +7,9 @@ public class MockServer : MonoBehaviour
 {
     public event Action<ServerStateMessage> NewServerMessage;
 
-    [SerializeField] GameObject[] m_clientObjects = null;
-    [SerializeField] GameObject m_sceneRoot = null;
+    [SerializeField] GameObject[] m_clientRefs = null;
+    [SerializeField] GameObject m_simulationRoot = null;
+    [SerializeField] GameObject m_syncRoot = null;
     [SerializeField] float m_timeBetweenSnapshots = 0.1f; 
 
     private Queue<InputMessage> m_receivedMessages = new Queue<InputMessage>();
@@ -25,17 +26,17 @@ public class MockServer : MonoBehaviour
     
     void Awake ()
     {
-        m_clients = new IClient[m_clientObjects.Length];
-        for (int i = 0; i < m_clientObjects.Length; i++)
+        m_clients = new IClient[m_clientRefs.Length];
+        for (int i = 0; i < m_clientRefs.Length; i++)
         {
-            m_clients[i] = m_clientObjects[i].GetComponent<IClient>();
+            m_clients[i] = m_clientRefs[i].GetComponent<IClient>();
             NewServerMessage += m_clients[i].ReceiveServerMessage;
             m_clients[i].NewClientMessage += ReceiveClientMessage;
         }
         
-        m_balls = GetComponentsInChildren<BallLauncher>(true);
-        m_syncedRigidbodies = GetComponentsInChildren<Rigidbody>(true);
-        m_paddle = GetComponentInChildren<PaddleController>(true);
+        m_balls = m_syncRoot.GetComponentsInChildren<BallLauncher>(true);
+        m_syncedRigidbodies = m_syncRoot.GetComponentsInChildren<Rigidbody>(true);
+        m_paddle = m_syncRoot.GetComponentInChildren<PaddleController>(true);
     }
 
     public void ReceiveClientMessage(InputMessage input_msg)
@@ -48,9 +49,9 @@ public class MockServer : MonoBehaviour
         // Disable the client, so Physics.Simulate does not process the client objects
         for (int i = 0; i < m_clients.Length; i++)
         {
-            m_clients[i].SetSceneActive(false);
+            m_clients[i].SetSimulationActive(false);
         }
-        m_sceneRoot.SetActive(true);
+        m_simulationRoot.SetActive(true);
 
         UpdateServer(Time.fixedDeltaTime);
         
@@ -61,9 +62,9 @@ public class MockServer : MonoBehaviour
         // Turn client objects back on
         for (int i = 0; i < m_clients.Length; i++)
         {
-            m_clients[i].SetSceneActive(true);
+            m_clients[i].SetSimulationActive(true);
         }
-        m_sceneRoot.SetActive(false);
+        m_simulationRoot.SetActive(false);
 
         m_tick++;
     }

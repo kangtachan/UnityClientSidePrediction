@@ -7,5 +7,5 @@ public interface IClient
 {
     event Action<InputMessage> NewClientMessage;
     void ReceiveServerMessage(ServerStateMessage stateMessage);
-    void SetSceneActive(bool active);
+    void SetSimulationActive(bool active);
 }

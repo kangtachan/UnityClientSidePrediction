@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class Client : MonoBehaviour, IClient
+public class LocalClient : MonoBehaviour, IClient
 {
     public event Action<InputMessage> NewClientMessage;
 
-    [SerializeField] GameObject m_sceneRoot = null;
+    [SerializeField] GameObject m_simulationRoot = null;
+    [SerializeField] GameObject m_syncRoot = null;
     [SerializeField] float PositionErrorThreshold = 0.0001f;
     [SerializeField] float RotationErrorThreshold = 0.001f;
 
@@ -25,13 +26,13 @@ public class Client : MonoBehaviour, IClient
 
     private void Awake()
     {
-        m_syncedRigidbodies = GetComponentsInChildren<Rigidbody>(true);
-        m_paddle = GetComponentInChildren<PaddleController>(true);
+        m_syncedRigidbodies = m_syncRoot.GetComponentsInChildren<Rigidbody>(true);
+        m_paddle = m_syncRoot.GetComponentInChildren<PaddleController>(true);
     }
 
-    public void SetSceneActive(bool active)
+    public void SetSimulationActive(bool active)
     {
-        m_sceneRoot.SetActive(active);
+        m_simulationRoot.SetActive(active);
     }
 
     public void CorrectionEnabled(bool correctionEnabled)

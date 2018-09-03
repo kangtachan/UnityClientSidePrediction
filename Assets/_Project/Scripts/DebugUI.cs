@@ -6,7 +6,7 @@ using UnityEngine;
 public class DebugUI : MonoBehaviour {
 
     [SerializeField] MockServer m_mockServer = null;
-    [SerializeField] Client m_client = null;
+    [SerializeField] LocalClient m_client = null;
     [SerializeField] Text m_latencyText = null;
     [SerializeField] Slider m_latencySlider = null;
     [SerializeField] Text m_score = null;
