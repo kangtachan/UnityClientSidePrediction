@@ -20,7 +20,7 @@ public class LocalClient : MonoBehaviour, IClient
     private uint m_tick = 0;
     private Rigidbody[] m_syncedRigidbodies = null;
     private PaddleController m_paddle = null;
-    private bool m_correctionEnabled;
+    private bool m_correctionEnabled = true;
 
     public uint Score { get; private set; }
 
