@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class Client : MonoBehaviour
+public class Client : MonoBehaviour, IClient
 {
     public event Action<InputMessage> NewClientMessage;
 

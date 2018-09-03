@@ -7,8 +7,9 @@ public class MockServer : MonoBehaviour
 {
     public event Action<ServerStateMessage> NewServerMessage;
 
-    [SerializeField] Client m_client = null;
+    [SerializeField] GameObject[] m_clientObjects = null;
     [SerializeField] GameObject m_sceneRoot = null;
+    [SerializeField] float m_timeBetweenSnapshots = 0.1f; 
 
     private Queue<InputMessage> m_receivedMessages = new Queue<InputMessage>();
     private Queue<DelayedStateMessage> m_messagesToSend = new Queue<DelayedStateMessage>();
@@ -16,14 +17,21 @@ public class MockServer : MonoBehaviour
     private BallLauncher[] m_balls = null;
     private Rigidbody[] m_syncedRigidbodies = null;
     private PaddleController m_paddle = null;
+    private float m_snapshotTimeAccum = 0;
+    private IClient[] m_clients = null;
 
     public uint Score { get; private set; }
     public float Latency { get; set; }
     
     void Awake ()
     {
-        m_client.NewClientMessage += ReceiveClientMessage;
-        NewServerMessage += m_client.ReceiveServerMessage;
+        m_clients = new IClient[m_clientObjects.Length];
+        for (int i = 0; i < m_clientObjects.Length; i++)
+        {
+            m_clients[i] = m_clientObjects[i].GetComponent<IClient>();
+            NewServerMessage += m_clients[i].ReceiveServerMessage;
+            m_clients[i].NewClientMessage += ReceiveClientMessage;
+        }
         
         m_balls = GetComponentsInChildren<BallLauncher>(true);
         m_syncedRigidbodies = GetComponentsInChildren<Rigidbody>(true);
@@ -35,20 +43,26 @@ public class MockServer : MonoBehaviour
         m_receivedMessages.Enqueue(input_msg);
     }
 
-    void FixedUpdate ()
+    void FixedUpdate()
     {
         // Disable the client, so Physics.Simulate does not process the client objects
-        m_client.SetSceneActive(false);
+        for (int i = 0; i < m_clients.Length; i++)
+        {
+            m_clients[i].SetSceneActive(false);
+        }
         m_sceneRoot.SetActive(true);
 
         UpdateServer(Time.fixedDeltaTime);
         
         CreateOutgoingMessages();
 
-        DispatchOutgoingMessages();
+        DispatchOutgoingMessages(Time.fixedDeltaTime);
 
         // Turn client objects back on
-        m_client.SetSceneActive(true);
+        for (int i = 0; i < m_clients.Length; i++)
+        {
+            m_clients[i].SetSceneActive(true);
+        }
         m_sceneRoot.SetActive(false);
 
         m_tick++;
@@ -99,16 +113,22 @@ public class MockServer : MonoBehaviour
         });
     }
     
-    private void DispatchOutgoingMessages()
+    private void DispatchOutgoingMessages(float dt)
     {
-        // Send messages after fake latency time is reached
-        while (m_messagesToSend.Count > 0 && m_messagesToSend.Peek().sendTime <= Time.time)
+        m_snapshotTimeAccum += dt;
+        if (m_snapshotTimeAccum > m_timeBetweenSnapshots)
         {
-            ServerStateMessage message = m_messagesToSend.Dequeue().message;
+            m_snapshotTimeAccum -= dt;
 
-            if (NewServerMessage != null)
+            // Send messages after fake latency time is reached
+            while (m_messagesToSend.Count > 0 && m_messagesToSend.Peek().sendTime <= Time.time)
             {
-                NewServerMessage(message);
+                ServerStateMessage message = m_messagesToSend.Dequeue().message;
+
+                if (NewServerMessage != null)
+                {
+                    NewServerMessage(message);
+                }
             }
         }
     }
