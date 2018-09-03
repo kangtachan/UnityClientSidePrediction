@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+/// <summary>
+/// On update from server, sets all objects directly to the server position. No client
+/// side prediction.
+/// Displayed objects tracked the received positions in m_syncObjects, using 
+/// SmoothFollowTransform script. This is set up in the scene.
+/// </summary>
 public class RemoteClient : MonoBehaviour, IClient
 {
     public event Action<InputMessage> NewClientMessage = null;

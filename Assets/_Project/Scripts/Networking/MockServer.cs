@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+/// <summary>
+/// Receive input from client, and simulates physics to determine the state.
+/// Has authority over whether the ball has been missed, and decides the score.
+/// Sends snapshot states to the clients.
+/// Fake latency can be applied to the sent messages.
+/// </summary>
 public class MockServer : MonoBehaviour
 {
     public event Action<ServerStateMessage> NewServerMessage;

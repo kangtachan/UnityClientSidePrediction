@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+/// <summary>
+/// Sends input messages to server.
+/// Predicts simulation on server with local simulation using input.
+/// When server message received, determines if error corrections is required. Error correction
+/// applied by resetting all objects to state of server, and re-simulating with buffered input
+/// to the current frame. 
+/// </summary>
 public class LocalClient : MonoBehaviour, IClient
 {
     public event Action<InputMessage> NewClientMessage;
